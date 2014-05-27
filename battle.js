@@ -22,7 +22,7 @@ Battle.prototype = {
 			console.log ("Unknown action from ", soldier, ": ", action);
 		}
 		
-		history.append (action);
+		this.history.push (action);
 	},
 	
 	step: function () {
@@ -35,12 +35,13 @@ Battle.prototype = {
 		var state = [];
 		for (var i in this.field) {
 			var row = [];
+			state.push (row);
 			for (var j in this.field[i]) {
 				var col = [];
 				row[j] = col;
 				for (var k in this.field[i][j]) {
 					var unit = this.field[i][j][k];
-					if (unit && unit.hp > 0) {
+					if (unit.stats.hp > 0) {
 						unit = unit.copy ();
 						unit.x = j;
 						unit.y = i;
@@ -57,15 +58,15 @@ Battle.prototype = {
 			for (var j in state[i]) {
 				for (var k in state[i][j]) {
 					var unit = state[i][j][k];
-					if (unit && unit.hp > 0) {
-						playerHp[unit.soldier.player]++;
+					if (unit.stats.hp > 0) {
+						playerHp[unit.player] += unit.stats.hp;
 						this.act (unit, unit.action (state));
 					}
 				}
 			}
 		}
 
-		if (playerHp[this.players[0]] == 0 && playerHp[this.players[0]] == 0) {
+		if (playerHp[this.players[0]] == 0 && playerHp[this.players[1]] == 0) {
 			this.ended = true;
 			this.winner = null;
 		} else if (playerHp[this.players[0]] == 0) {

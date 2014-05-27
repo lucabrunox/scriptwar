@@ -6,17 +6,20 @@ var player2 = "Player 2";
 
 var code1 = "{}";
 var code2 = "{}";
-var soldierType1 = new army.SoldierType ("Type 1");
-var soldierType2 = new army.SoldierType ("Type 2");
+var soldierType1 = new army.SoldierType ("Type 1", code1);
+var soldierType2 = new army.SoldierType ("Type 2", code2);
 var soldier1 = new army.Soldier (player1, soldierType1);
 var soldier2 = new army.Soldier (player2, soldierType2);
+
+soldier1.stats.hp = 10;
+soldier2.stats.hp = 10;
 
 var field = [
 	[[soldier1.copy ()], [], [], []],
 	[[], [], [], []],
 	[[], [], [], []],
 	[[], [], [], []],
-	[[], [], [], [soldier1]]
+	[[], [], [], [soldier2.copy ()]]
 ];
 
 var battle = new Battle ([player1, player2], field, 100);

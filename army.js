@@ -5,9 +5,9 @@ var Lexer = require("./lexer.js");
 var Parser = require("./parser.js");
 var Eval = require("./eval.js");
 
-var SoldierType = function (name) {
+var SoldierType = function (name, code) {
 	this.name = name;
-	this.code = null;
+	this.code = code;
 	this._parsed = null;
 };
 

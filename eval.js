@@ -112,7 +112,12 @@ Eval.prototype = {
 	},
 
 	visit_object: function (expr) {
-		console.log ("unsupported: "+expr.toString());
+		var obj = {};
+		for (var propname in expr.obj) {
+			expr.obj[propname].accept (this);
+			obj[propname] = this.val;
+		}
+		this.val = obj;
 	},
 
 	visit_list: function (expr) {
