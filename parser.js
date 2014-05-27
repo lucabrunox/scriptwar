@@ -213,6 +213,8 @@ Parser.prototype = {
 				expr = this.parseCall (expr);
 			} else if (this.accept ("pun", ".")) {
 				expr = this.parseMember (expr);
+			} else if (this.isTok ("pun", "[")) {
+				expr = this.parseElement (expr);
 			} else {
 				break;
 			}
@@ -226,10 +228,17 @@ Parser.prototype = {
 		if (id == "null" && !inner) {
 			return new ast.LitExpr (null);
 		} else {
-			return new ast.MemberExpr (id, inner);
+			return new ast.MemberExpr (id, inner, true);
 		}
 	},
 
+	parseElement: function (inner) {
+		this.skip ("pun", "[");
+		var expr = this.parseNonAssign ();
+		this.skip ("pun", "]");
+		return new ast.MemberExpr (expr, inner, false);
+	},
+	
 	parseCall: function (inner) {
 		this.skip ("pun", "(");
 

@@ -39,12 +39,18 @@ Eval.prototype = {
 	},
 
 	visit_member: function (expr) {
+		var elem = expr.name;
+		if (!expr.literal) {
+			elem.accept (this);
+			elem = this.val;
+		}
+		
+		var obj = this.scope;
 		if (expr.inner) {
 			expr.inner.accept (this);
-			this.val = this.val[expr.name];
-		} else {
-			this.val = this.scope[expr.name];
+			obj = this.val;
 		}
+		this.val = obj[elem];
 	},
 
 	visit_lit: function (expr) {
@@ -94,7 +100,12 @@ Eval.prototype = {
 	},
 
 	visit_list: function (expr) {
-		console.log ("unsupported: "+expr.toString());
+		var list = [];
+		for (var i in expr.elems) {
+			expr.elems[i].accept (this);
+			list.push (this.val);
+		}
+		this.val = list;
 	},
 
 	visit_call: function (expr) {

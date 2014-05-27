@@ -60,9 +60,10 @@ IfExpr.prototype = {
 	}
 };
 
-var MemberExpr = function (name, inner) {
+var MemberExpr = function (name, inner, literal) {
 	this.name = name;
 	this.inner = inner;
+	this.literal = literal;
 };
 
 MemberExpr.prototype = {
