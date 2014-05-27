@@ -1,5 +1,20 @@
 var ast = require("./ast.js");
 
+var binOps = {
+	'+': function (x,y) { return x+y; },
+	'-': function (x,y) { return x-y; },
+	'*': function (x,y) { return x*y; },
+	'/': function (x,y) { return x/y; },
+	'**': function (x,y) { return Math.pow(x, y); },
+	'//': function (x,y) { return ~~(x/y); },
+	'>': function (x,y) { return x>y; },
+	'<': function (x,y) { return x<y; },
+	'==': function (x,y) { return x===y; },
+	'!=': function (x,y) { return x!==y; },
+	'>=': function (x,y) { return x>=y; },
+	'<=': function (x,y) { return x<=y; },
+};
+
 var Eval = function () {
 	this.scope = {};
 	this.val = null;
@@ -79,20 +94,18 @@ Eval.prototype = {
 			var right = this.val;
 
 			var op = expr.op;
-			if (op == '+') {
-				this.val = left+right;
-			} else if (op == '-') {
-				this.val = left-right;
-			} else if (op == '>') {
-				this.val = left>right;
-			} else {
-				console.log ("unsupported: "+expr.toString());
-			}
+			this.val = binOps[op](left, right);
 		}
 	},
 
 	visit_unary: function (expr) {
-		console.log ("unsupported: "+expr.toString());
+		expr.inner.accept (this);
+		var op = expr.op;
+		if (op == '-') {
+			this.val = -this.val;
+		} else {
+			console.log ("unsupported: "+expr.toString());
+		}
 	},
 
 	visit_object: function (expr) {
