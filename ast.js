@@ -4,6 +4,10 @@ var SeqExpr = function (inner) {
 };
 
 SeqExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_seq (this);
+	},
+	
 	toString: function () {
 		var res = this.inner.toString();
 		if (this.next) {
@@ -20,6 +24,10 @@ var FunExpr = function (params, body) {
 };
 
 FunExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_fun (this);
+	},
+	
 	toString: function () {
 		var res = "fun";
 		if (this.params) {
@@ -39,6 +47,10 @@ var IfExpr = function (cond, body) {
 };
 
 IfExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_if (this);
+	},
+	
 	toString: function () {
 		var res = "if ("+this.cond.toString()+") {\n"+this.trueBody.toString()+"\n}";
 		if (this.falseBody) {
@@ -54,6 +66,10 @@ var MemberExpr = function (name, inner) {
 };
 
 MemberExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_member (this);
+	},
+	
 	toString: function () {
 		if (!this.inner) {
 			return this.name;
@@ -68,6 +84,10 @@ var LitExpr = function (val) {
 };
 
 LitExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_lit (this);
+	},
+	
 	toString: function () {
 		return ""+this.val;
 	}
@@ -80,6 +100,10 @@ var BinaryExpr = function (op, left, right) {
 };
 
 BinaryExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_bin (this);
+	},
+	
 	toString: function () {
 		return "("+this.left.toString()+" "+this.op+" "+this.right.toString()+")";
 	}
@@ -92,6 +116,10 @@ var UnaryExpr = function (op, inner, postfix) {
 };
 
 UnaryExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_unary (this);
+	},
+	
 	toString: function () {
 		if (this.postfix) {
 			return "("+this.inner.toString()+this.op+")";
@@ -106,6 +134,10 @@ var ObjectExpr = function (obj) {
 };
 
 ObjectExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_object (this);
+	},
+	
 	toString: function () {
 		var s = "{ ";
 		for (var propname in this.obj) {
@@ -123,6 +155,10 @@ var ListExpr = function () {
 };
 
 ListExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_list (this);
+	},
+	
 	toString: function () {
 		var s = "[ ";
 		for (var i in this.elems) {
@@ -140,6 +176,10 @@ var CallExpr = function (inner) {
 };
 
 CallExpr.prototype = {
+	accept: function (vis) {
+		vis.visit_call (this);
+	},
+	
 	toString: function () {
 		var s = this.inner.toString()+" (";
 		for (var i in this.args) {
