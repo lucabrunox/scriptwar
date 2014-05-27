@@ -16,12 +16,15 @@ var binOps = {
 };
 
 var Eval = function () {
-	this.scope = {};
 	this.val = null;
+	this.scope = {};
 };
 
 Eval.prototype = {
-	evaluate: function (expr) {
+	evaluate: function (scope, expr) {
+		this.val = null;
+		this.scope = scope;
+		
 		expr.accept (this);
 		return this.val;
 	},
