@@ -108,6 +108,19 @@ Lexer.prototype = {
 			return newtok ("num", d);
 		}
 
+		if (this.char() == "'" || this.char() == "'") {
+			var q = this.char();
+			this.inc ();
+			var s = q;
+			while (!this.eof() && this.char() != q) {
+				s += this.char();
+				this.inc ();
+			}
+			s += this.char ();
+			this.inc ();
+			return newtok ("str", s);
+		}
+		
 		var nextEqual = '=!><';
 		if (nextEqual.indexOf (this.char()) >= 0) {
 			var c = this.char();

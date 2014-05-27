@@ -4,8 +4,8 @@ var army = require("./army.js");
 var player1 = "Player 1";
 var player2 = "Player 2";
 
-var code1 = "{}";
-var code2 = "{}";
+var code1 = "{type: 'move', dest: {x: 3, y: 3}}";
+var code2 = code1;
 var soldierType1 = new army.SoldierType ("Type 1", code1);
 var soldierType2 = new army.SoldierType ("Type 2", code2);
 var soldier1 = new army.Soldier (player1, soldierType1);
@@ -24,4 +24,4 @@ var field = [
 
 var battle = new Battle ([player1, player2], field, 100);
 battle.simulate ();
-console.log (battle.winner);
+console.log (battle.winner, battle.field);

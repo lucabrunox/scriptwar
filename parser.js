@@ -197,7 +197,9 @@ Parser.prototype = {
 		if (this.isTok ("id")) {
 			expr = this.parseMember ();
 		} else if (this.isTok ("num")) {
-			expr = this.parseNumLiteral ();
+			expr = this.parseLiteral ("num");
+		} else if (this.isTok ("str")) {
+			expr = this.parseLiteral ("str");
 		} else if (this.accept ("(")) {
 			var expr = this.parseExpr ();
 			this.skip (")");
@@ -259,7 +261,7 @@ Parser.prototype = {
 		var obj = {};
 		while (!this.isTok ("eof") && !this.isTok ("pun", "}")) {
 			var id = this.parseId ();
-			this.skip ("op", ":");
+			this.skip ("pun", ":");
 			var val = this.parseNonAssign ();
 			obj[id] = val;
 			
@@ -283,8 +285,8 @@ Parser.prototype = {
 		return expr;
 	},
 
-	parseNumLiteral: function () {
-		this.expect ("num");
+	parseLiteral: function (t) {
+		this.expect (t);
 		var expr = new ast.LitExpr (this.tok.value);
 		this.next ();
 		return expr;

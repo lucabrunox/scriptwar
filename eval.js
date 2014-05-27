@@ -72,7 +72,11 @@ Eval.prototype = {
 	},
 
 	visit_lit: function (expr) {
-		this.val = expr.val;
+		if (typeof (expr.val) == "string") {
+			this.val = expr.val.substr(1, expr.val.length-2);
+		} else {
+			this.val = expr.val;
+		}
 	},
 
 	visit_bin: function (expr) {
