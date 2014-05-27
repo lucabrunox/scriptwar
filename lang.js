@@ -113,6 +113,7 @@ Lexer.prototype = {
 			var c = this.char();
 			this.inc ();
 			if (this.char() == '=') {
+				this.inc ();
 				return newtok ("op", c+"=");
 			}
 			return newtok ("op", c);
@@ -123,6 +124,7 @@ Lexer.prototype = {
 			var c = this.char();
 			this.inc ();
 			if (this.char() == c) {
+				this.inc ();
 				return newtok ("op", c+c);
 			}
 			return newtok ("op", c);
@@ -226,14 +228,19 @@ BinaryExpr.prototype = {
 	}
 };
 
-var UnaryExpr = function (op, inner) {
+var UnaryExpr = function (op, inner, postfix) {
 	this.op = op;
 	this.inner = inner;
+	this.postfix = postfix;
 };
 
 UnaryExpr.prototype = {
 	toString: function () {
-		return "("+this.op+this.inner.toString()+")";
+		if (this.postfix) {
+			return "("+this.inner.toString()+this.op+")";
+		} else {
+			return "("+this.op+this.inner.toString()+")";
+		}
 	}
 };
 
@@ -461,18 +468,22 @@ Parser.prototype = {
 	},
 
 	parseUnary: function () {
-		if (this.accept ("op", "!") || this.accept ("op", "-")) {
+		var expr;
+		
+		if (this.accept ("op", "!") || this.accept ("op", "-") ||
+			this.accept ("op", "++") || this.accept ("op", "--")) {
 			var op = this.lasttok.value;
-			var inner = this.parsePrimary ();
-			return new UnaryExpr (op, inner);
+			expr = this.parsePrimary ();
+			expr = new UnaryExpr (op, expr, false);
+		} else {
+			expr = this.parsePrimary ();
 		}
 
-		var inner = this.parsePrimary ();
 		if (this.accept ("op", "++") || this.accept ("op", "--")) {
 			var op = this.lasttok.value;
-			return new UnaryExpr (op, inner);
+			expr = new UnaryExpr (op, expr, true);
 		}
-		return inner;
+		return expr;
 	},
 
 	parsePrimary: function () {
