@@ -6,6 +6,8 @@ var Eval = require("./eval.js");
 var code = "\
 asd = 23 + 4;\
 dsa = asd-10;\
+f = fun x: x+2;\
+f(4)\
 ";
 
 var lex = new Lexer(code);

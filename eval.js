@@ -107,7 +107,7 @@ Eval.prototype = {
 			args.push (this.val);
 		}
 
-		func.apply (this, args);
+		fun.apply (this, args);
 	},
 };
 
