@@ -1,3 +1,26 @@
+var SoldierIface = function(soldier) {
+	this.soldier = soldier;
+};
+
+SoldierIface.prototype = {
+	get: function (evaluator, name) {
+		if (name == "enemy") {
+			return evaluator.player != this.soldier.player;
+		}
+		if (name == "type") {
+			return undefined;
+		}
+		if (name == "x" || name == "y") {
+			return this.soldier[name];
+		}
+		return this.soldier.stats[name];
+	},
+
+	set: function (evaluator, name, value) {
+		console.log ("FORBIDDEN SET");
+	}
+};
+
 var Battle = function (players, field, maxSteps) {
 	this.players = players;
 	this.field = field;
@@ -33,16 +56,20 @@ Battle.prototype = {
 		this.steps++;
 
 		var state = [];
+		state.__acl = { immutable: true }
 		for (var i in this.field) {
 			var row = [];
+			row.__acl = { immutable: true }
 			state.push (row);
 			for (var j in this.field[i]) {
 				var col = [];
-				row[j] = col;
+				col.__acl = { immutable: true }
+				row.push (col);
 				for (var k in this.field[i][j]) {
 					var unit = this.field[i][j][k];
 					if (unit.stats.hp > 0) {
 						unit = unit.copy ();
+						unit.__acl = { immutable: true, iface: new SoldierIface(unit) };
 						unit.x = j;
 						unit.y = i;
 						col.push (unit);
@@ -54,9 +81,9 @@ Battle.prototype = {
 		var playerHp = {};
 		playerHp[this.players[0]] = 0;
 		playerHp[this.players[1]] = 0;
-		for (var i in state) {
-			for (var j in state[i]) {
-				for (var k in state[i][j]) {
+		for (var i=0; i < state.length; i++) {
+			for (var j=0; j < state[i].length; j++) {
+				for (var k=0; k < state[i][j].length; k++) {
 					var unit = state[i][j][k];
 					if (unit.stats.hp > 0) {
 						playerHp[unit.player] += unit.stats.hp;

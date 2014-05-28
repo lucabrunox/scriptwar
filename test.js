@@ -24,4 +24,5 @@ var field = [
 
 var battle = new Battle ([player1, player2], field, 100);
 battle.simulate ();
-console.log (battle.winner, battle.field);
+console.log ("Winner ", battle.winner);
+console.log ("Field ", battle.field);

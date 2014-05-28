@@ -1,6 +1,3 @@
-var extend = require('util')._extend;
-var copy = function (x) { return extend({}, x); };
-
 var Lexer = require("./lexer.js");
 var Parser = require("./parser.js");
 var Eval = require("./eval.js");
@@ -61,7 +58,7 @@ var Soldier = function (player, type) {
 Soldier.prototype = {
 	action: function (state) {
 		var scope = {
-			ground: state,
+			field: state,
 			soldier: this
 		};
 
@@ -71,7 +68,9 @@ Soldier.prototype = {
 
 	copy: function () {
 		var c = new Soldier (this.player, this.type);
-		c.stats = copy (this.stats);
+		for (var propname in this.stats) {
+			c.stats[propname] = this.stats[propname];
+		}
 		return c;
 	},
 };
